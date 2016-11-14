@@ -1,6 +1,9 @@
 Library/
 obj/
+TempAssets/
 Assembly-CSharp.csproj
 Castle Slash.sln
 Castle Slash.userprefs
 README.md
+CastleSlash.sln
+CastleSlash.userprefs
