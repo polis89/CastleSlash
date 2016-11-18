@@ -100,6 +100,10 @@ public class PlayerMoveScript : MonoBehaviour {
 		Vector3 rotation = new Vector3 (gameObject.transform.rotation.eulerAngles.x, 0, rotationZ);
 		gameObject.transform.eulerAngles = rotation;
 	}
+
+	public FirePosition GetPosition(){
+		return position;
+	}
 }
 
 public enum FirePosition{
