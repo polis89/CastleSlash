@@ -7,7 +7,7 @@ public class PlayerMoveScript : MonoBehaviour {
 
 	private FirePosition position;
 
-	public Camera camera;
+	public Camera gameCamera;
 	public float rotationLeft;
 	private float rotationMiddle;
 	public float rotationRight;
@@ -25,7 +25,7 @@ public class PlayerMoveScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (isMoving) {
-			Vector3 mousePosition = camera.ScreenToWorldPoint(Input.mousePosition);
+			Vector3 mousePosition = gameCamera.ScreenToWorldPoint(Input.mousePosition);
 			float x_delta = mousePosition.x - startMoveTouchCoord.x;
 			float grenzeLeft = 0;
 			float grenzeRight = 0;
@@ -69,7 +69,7 @@ public class PlayerMoveScript : MonoBehaviour {
 
 	void StartMove(){
 		isMoving = true;
-		startMoveTouchCoord = camera.ScreenToWorldPoint(Input.mousePosition);
+		startMoveTouchCoord = gameCamera.ScreenToWorldPoint(Input.mousePosition);
 	}
 
 	void EndMove(){
@@ -86,7 +86,7 @@ public class PlayerMoveScript : MonoBehaviour {
 	}
 
 	void SetPosition(FirePosition positionNew){
-		logger.Log (logTAG, "Position: " + positionNew);		
+		//logger.Log (logTAG, "Position: " + positionNew);		
 		position = positionNew;
 		float rotationZ = 0;
 		switch (positionNew) {
