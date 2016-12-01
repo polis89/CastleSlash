@@ -10,14 +10,23 @@ public class GameController : MonoBehaviour {
 	private Direction[] directionArray;
 	private int direction_array_index; //Count of elements in direction Array, and also index for nex Insertion
 
+	private GameObject leftRoad;
+	private GameObject centerRoad;
+	private GameObject rightRoad;
+
 	public GameObject playerObject;
 	public Camera gameCamera;
 	public float moveInputSensivity;
 	public float errorAngle;
+	public GameObject enemy;
 
 	// Use this for initialization
 	void Start () {
 		playerMoveScript = playerObject.GetComponent<PlayerMoveScript> ();
+		GameObject[] roads = GameObject.FindGameObjectsWithTag ("Road");
+		leftRoad = roads [2];
+		centerRoad = roads [1];
+		rightRoad = roads [0];
 	}
 	
 	// Update is called once per frame
