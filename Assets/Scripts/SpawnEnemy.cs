@@ -7,7 +7,10 @@ public class SpawnEnemy : MonoBehaviour {
 
 	public GameObject[] waypoints;
 
-	public void Spawn(GameObject enemy){
-		Instantiate (enemy).GetComponent<MoveEnemy> ().waypoints = waypoints;
+	public GameObject Spawn(GameObject enemy){
+		//Set way waypoints in enemy Mover script
+		GameObject inst = Instantiate (enemy);
+		inst.GetComponent<MoveEnemy> ().waypoints = waypoints;
+		return inst;
 	}
 }

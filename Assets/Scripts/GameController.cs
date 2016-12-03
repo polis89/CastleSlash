@@ -10,23 +10,25 @@ public class GameController : MonoBehaviour {
 	private Direction[] directionArray;
 	private int direction_array_index; //Count of elements in direction Array, and also index for nex Insertion
 
-	private GameObject leftRoad;
-	private GameObject centerRoad;
-	private GameObject rightRoad;
+	public GameObject leftRoad;
+	public GameObject centerRoad;
+	public GameObject rightRoad;
+
+	public float moveInputSensivity;
+	public float errorAngle;
 
 	public GameObject playerObject;
 	public Camera gameCamera;
-	public float moveInputSensivity;
-	public float errorAngle;
-	public GameObject enemy;
+	private ArrayList leftRoadList = new ArrayList ();
+	private ArrayList centerRoadList = new ArrayList ();
+	private ArrayList rightRoadList = new ArrayList ();
+
+	public GameObject enemy; //TEST??
 
 	// Use this for initialization
 	void Start () {
 		playerMoveScript = playerObject.GetComponent<PlayerMoveScript> ();
-		GameObject[] roads = GameObject.FindGameObjectsWithTag ("Road");
-		leftRoad = roads [2];
-		centerRoad = roads [1];
-		rightRoad = roads [0];
+		StartCoroutine (SpawnCoroutine());
 	}
 	
 	// Update is called once per frame
@@ -108,23 +110,57 @@ public class GameController : MonoBehaviour {
 	}
 
 	void MakeAction (){
-		printArray ();
+		//printArray ();
 		if (direction_array_index == 2) {
-			if (directionArray[0].Equals(Direction.up_right) && directionArray[1].Equals(Direction.down_right)){
+			if (directionArray[0].Equals(Direction.up_right) && directionArray[1].Equals(Direction.down_right) ||
+				directionArray[0].Equals(Direction.up_left) && directionArray[1].Equals(Direction.down_left)){
 				// ^
+				FireCannon();
 				logger.Log(logTAG, "UP");
 				return;
 			}
-			if (directionArray[0].Equals(Direction.down_right) && directionArray[1].Equals(Direction.up_right)){
+			if (directionArray[0].Equals(Direction.down_right) && directionArray[1].Equals(Direction.up_right) ||
+				directionArray[0].Equals(Direction.down_left) && directionArray[1].Equals(Direction.up_left)){
 				// v
 				logger.Log(logTAG, "DOWN");
 				return;
 			}
 		}
 	}
+
+	void FireCannon(){
+		switch (playerObject.GetComponent<PlayerMoveScript> ().GetPosition ()) {
+		case FirePosition.left:
+			if (leftRoadList.Count < 1) {
+				return;
+			}
+			GameObject target = leftRoadList [0] as GameObject;
+			if (target != null) {
+				Destroy (target);
+				leftRoadList.Remove (target);
+			}
+			break;
+		case FirePosition.center:
+			break;
+		case FirePosition.right:
+			break;
+		}
+	}
+
 	void printArray(){
+		string array = "";
 		foreach (Direction dir in directionArray) {
-			logger.Log (logTAG, dir);
+			array += dir + ":";
+		}
+		logger.Log(logTAG, array);
+	}
+
+	IEnumerator SpawnCoroutine(){
+		yield return new WaitForSeconds (2f);
+		for (int i = 0; i < 4; i++) {
+			GameObject newEnemy = leftRoad.GetComponent<SpawnEnemy> ().Spawn (enemy);
+			leftRoadList.Add (newEnemy);
+			yield return new WaitForSeconds (2f);
 		}
 	}
 }

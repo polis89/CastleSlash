@@ -9,7 +9,7 @@ public class PlayerMoveScript : MonoBehaviour {
 
 	public Camera gameCamera;
 	public float rotationLeft;
-	private float rotationMiddle;
+	private float rotationMiddle = 0;
 	public float rotationRight;
 
 	public float touchDiapazon;
@@ -17,8 +17,11 @@ public class PlayerMoveScript : MonoBehaviour {
 	private bool isMoving;
 	private Vector3 startMoveTouchCoord;
 
+	//Grenzen for player move, set by every touchDown
+	private float grenzeLeft;
+	private float grenzeRight;
+
 	void Start (){
-		rotationMiddle = 0;
 		SetPosition (FirePosition.center);
 	}
 	
@@ -27,24 +30,16 @@ public class PlayerMoveScript : MonoBehaviour {
 		if (isMoving) {
 			Vector3 mousePosition = gameCamera.ScreenToWorldPoint(Input.mousePosition);
 			float x_delta = mousePosition.x - startMoveTouchCoord.x;
-			float grenzeLeft = 0;
-			float grenzeRight = 0;
 			float rotationZ = 0;
 			switch (position) {
 			case FirePosition.center:
-				grenzeLeft = startMoveTouchCoord.x - touchDiapazon;
-				grenzeRight = startMoveTouchCoord.x + touchDiapazon;
 				rotationZ = rotationRight * (x_delta / touchDiapazon);
 				break;
 			case FirePosition.left:
-				grenzeLeft = startMoveTouchCoord.x;
-				grenzeRight = startMoveTouchCoord.x + touchDiapazon * 2;
 				rotationZ = rotationLeft + rotationRight * (x_delta / touchDiapazon);
 				break;
 			case FirePosition.right:
-				grenzeLeft = startMoveTouchCoord.x - touchDiapazon * 2;
 				rotationZ = 360 - rotationLeft + rotationRight * (x_delta / touchDiapazon);
-				grenzeRight = startMoveTouchCoord.x;
 				break;
 			}
 			if (mousePosition.x >= grenzeLeft &&
@@ -68,8 +63,23 @@ public class PlayerMoveScript : MonoBehaviour {
 	}
 
 	void StartMove(){
-		isMoving = true;
 		startMoveTouchCoord = gameCamera.ScreenToWorldPoint(Input.mousePosition);
+		//Set move boundaries
+		switch (position) {
+		case FirePosition.center:
+			grenzeLeft = startMoveTouchCoord.x - touchDiapazon;
+			grenzeRight = startMoveTouchCoord.x + touchDiapazon;
+			break;
+		case FirePosition.left:
+			grenzeLeft = startMoveTouchCoord.x;
+			grenzeRight = startMoveTouchCoord.x + touchDiapazon * 2;
+			break;
+		case FirePosition.right:
+			grenzeLeft = startMoveTouchCoord.x - touchDiapazon * 2;
+			grenzeRight = startMoveTouchCoord.x;
+			break;
+		}
+		isMoving = true;
 	}
 
 	void EndMove(){
